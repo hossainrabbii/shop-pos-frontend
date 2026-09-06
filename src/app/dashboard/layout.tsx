@@ -1,20 +1,36 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import Link from 'next/link';
-import { Store, LayoutDashboard, Layers, Package, ShoppingCart, LogOut, ShieldCheck, Menu, X } from 'lucide-react';
-import { toast } from 'sonner';
-import { AuthGuard } from '@/components/auth/AuthGuard';
+import React, { useEffect, useState } from "react";
+import { useRouter, usePathname } from "next/navigation";
+import Link from "next/link";
+import {
+  Store,
+  LayoutDashboard,
+  Layers,
+  Package,
+  ShoppingCart,
+  LogOut,
+  ShieldCheck,
+  Menu,
+  X,
+} from "lucide-react";
+import { toast } from "sonner";
+import { AuthGuard } from "@/components/auth/AuthGuard";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const router = useRouter();
   const pathname = usePathname();
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(
+    null,
+  );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
@@ -27,15 +43,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   const handleLogout = () => {
     localStorage.clear();
-    toast.success('Logged out successfully');
-    router.push('/login');
+    toast.success("Logged out successfully");
+    router.push("/login");
   };
 
   const navItems = [
-    { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Categories', href: '/dashboard/categories', icon: Layers },
-    { name: 'Products', href: '/dashboard/products', icon: Package },
-    { name: 'POS Terminal', href: '/dashboard/pos', icon: ShoppingCart },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+    { name: "Categories", href: "/dashboard/categories", icon: Layers },
+    { name: "Products", href: "/dashboard/products", icon: Package },
+    { name: "Sales", href: "/dashboard/sales", icon: ShoppingCart },
+    { name: "Statistics", href: "/dashboard/statistics", icon: Layers },
   ];
 
   const renderSidebarContent = () => (
@@ -46,7 +63,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="bg-indigo-600 p-2 rounded-lg text-white">
             <Store className="w-5 h-5" />
           </div>
-          <span className="font-bold text-slate-900 tracking-tight">ShopPOS Enterprise</span>
+          <span className="font-bold text-slate-900 tracking-tight">
+            ShopPOS Enterprise
+          </span>
         </div>
 
         {/* Navigation Links */}
@@ -60,8 +79,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 href={item.href}
                 className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition ${
                   isActive
-                    ? 'bg-indigo-50 text-indigo-600 shadow-xs'
-                    : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                    ? "bg-indigo-50 text-indigo-600 shadow-xs"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -75,8 +94,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Sidebar Footer / User Badge */}
       <div className="p-4 border-t border-slate-200">
         <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3">
-          <p className="text-xs font-bold text-slate-900 truncate">{user?.name || 'Administrator'}</p>
-          <p className="text-[10px] text-slate-500 truncate">{user?.email || 'admin@shop.com'}</p>
+          <p className="text-xs font-bold text-slate-900 truncate">
+            {user?.name || "Administrator"}
+          </p>
+          <p className="text-[10px] text-slate-500 truncate">
+            {user?.email || "admin@shop.com"}
+          </p>
         </div>
         <button
           onClick={handleLogout}
@@ -108,7 +131,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               </button>
               {renderSidebarContent()}
             </div>
-            <div className="flex-1" onClick={() => setIsMobileMenuOpen(false)} />
+            <div
+              className="flex-1"
+              onClick={() => setIsMobileMenuOpen(false)}
+            />
           </div>
         )}
 
@@ -132,7 +158,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
 
             <div className="text-xs font-semibold text-slate-600">
-              Workspace: <span className="text-slate-900 font-bold">Main Branch</span>
+              Workspace:{" "}
+              <span className="text-slate-900 font-bold">Main Branch</span>
             </div>
           </header>
 
