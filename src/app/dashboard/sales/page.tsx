@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { ISale } from "@/types/sale.types";
 import { fetchSalesList } from "@/services/sale.service";
+import { fetchUser } from "@/services/User";
 
 export default function SalesManagementPage() {
   const [sales, setSales] = useState<ISale[]>([]);
@@ -48,6 +49,24 @@ export default function SalesManagementPage() {
     profit: 0,
     transactions: 0,
   });
+
+  // Fetch Sellers/Users list on initial component mount
+  useEffect(() => {
+    const fetchSellersData = async () => {
+      try {
+        const accessToken = localStorage.getItem("accessToken") || "";
+        const response = await fetchUser(accessToken);
+
+        // Based on your console log structure: response.data is the array of users
+        const usersList = response?.data || response || [];
+        setSellers(Array.isArray(usersList) ? usersList : []);
+      } catch (err) {
+        console.error("Failed to fetch sellers list", err);
+      }
+    };
+
+    fetchSellersData();
+  }, []);
 
   // Reset page to 1 whenever any filter changes
   useEffect(() => {
@@ -93,23 +112,18 @@ export default function SalesManagementPage() {
         to: statsPeriod === "custom" ? toDate || undefined : undefined,
       });
 
-      const salesData =
-        salesRes?.data?.sales || salesRes?.sales || salesRes?.data || [];
-      const paginationMeta =
-        salesRes?.data?.meta || salesRes?.meta || salesRes?.pagination || {};
-
+      // 1. Extract sales array correctly from data.sales
+      const salesData = salesRes?.data?.sales || [];
       setSales(Array.isArray(salesData) ? salesData : []);
 
-      const totalRecs =
-        paginationMeta.total || paginationMeta.totalRecords || salesData.length;
+      // 2. Extract pagination object correctly from data.pagination
+      const pagination = salesRes?.data?.pagination || {};
+
+      const totalRecs = pagination.totalRecords || salesData.length;
       setTotalRecords(totalRecs);
 
-      const backendTotalPages =
-        paginationMeta.totalPage || paginationMeta.totalPages;
-      const calculatedTotalPages = backendTotalPages
-        ? backendTotalPages
-        : Math.ceil(totalRecs / limit);
-
+      const calculatedTotalPages =
+        pagination.totalPages || Math.ceil(totalRecs / limit);
       setTotalPages(calculatedTotalPages > 0 ? calculatedTotalPages : 1);
     } catch (err) {
       console.error("Failed to fetch sales data", err);
@@ -119,7 +133,6 @@ export default function SalesManagementPage() {
   };
 
   return (
-    // h-screen and overflow-hidden locks the page to the device viewport height
     <div className="h-screen flex flex-col p-6 space-y-4 bg-white text-slate-900 font-sans overflow-hidden">
       {/* Top Header */}
       <div className="flex items-center justify-between shrink-0">
@@ -176,7 +189,7 @@ export default function SalesManagementPage() {
         </select>
       </div>
 
-      {/* Sales Table Section - flex-1 and min-h-0 allow it to dynamically fill remaining device height */}
+      {/* Sales Table Section */}
       <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs flex flex-col flex-1 min-h-0 overflow-hidden">
         {/* Scrollable Table Content */}
         <div className="flex-1 overflow-y-auto overflow-x-auto min-h-0">

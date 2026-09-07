@@ -3,14 +3,19 @@ import React, { useState, useEffect } from "react";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Trash2, Plus, Minus, User, ShoppingCart } from "lucide-react";
+import {
+  Trash2,
+  Plus,
+  Minus,
+  User,
+  ShoppingCart,
+  CheckCircle2,
+} from "lucide-react";
 import { getProducts } from "@/services/Product";
 import { createSaleService } from "@/services/sale.service";
 import { toast } from "sonner";
-// Import your actual createSale service here:
-// import { createSaleService } from "@/services/Sale";
+import ThermalReceipt from "@/components/modules/sale/ThermalReceipt/ThermalReceiptProps";
 
-// --- 1. Zod Validation & Types ---
 const createSaleValidation = z.object({
   customer: z.object({
     name: z.string().min(1, "Customer name is required"),
@@ -46,7 +51,9 @@ export default function CreateSalePage() {
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Fetch products from API on mount
+  const [isCompleted, setIsCompleted] = useState(false);
+  const [receiptData, setReceiptData] = useState<any>(null);
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -89,17 +96,14 @@ export default function CreateSalePage() {
     name: "items",
   });
 
-  // Watch fields for calculations & duplicate prevention
   const watchedItems = watch("items") || [];
   const watchedDiscount = watch("discount") || 0;
   const watchedPaidAmount = watch("paidAmount") || 0;
 
-  // Gather all currently selected product IDs to disable them in other dropdowns
   const selectedProductIds = watchedItems
     .map((item) => item.productId)
     .filter(Boolean);
 
-  // Calculations
   const subtotal = watchedItems.reduce((acc, item) => {
     const product = products.find((p) => p._id === item.productId);
     if (!product) return acc;
@@ -119,7 +123,6 @@ export default function CreateSalePage() {
         return;
       }
 
-      // Format payload to match backend schema requirements (sending only productId and quantity per item, plus optional fields)
       const payload = {
         customer: data.customer,
         items: data.items.map((item) => ({
@@ -136,23 +139,16 @@ export default function CreateSalePage() {
           : {}),
       };
 
-      console.log(payload, token);
-      // Call your backend API service here
       const response = await createSaleService(payload, token);
 
-      console.log("Submitting Payload to Backend:", payload);
-
-      // Simulated success block (Uncomment when you link your real service)
-      if (response.success) {
+      if (response?.success) {
         toast.success(response?.message || "Sale created successfully!");
+        setReceiptData(response.data);
+        setIsCompleted(true);
         reset();
       } else {
         toast.warning(response?.message || "Failed to create sale");
-
-        // alert(response.message || "Failed to create sale");
       }
-
-      // alert("Sale payload prepared successfully! Check console.");
     } catch (error: any) {
       console.error("Error creating sale:", error);
       alert(error?.message || "An error occurred while creating the sale.");
@@ -161,9 +157,52 @@ export default function CreateSalePage() {
     }
   };
 
+  if (isCompleted && receiptData) {
+    return (
+      <div className="max-w-4xl mx-auto p-6 bg-gray-50 min-h-screen flex flex-col items-center justify-center font-sans">
+        <div className="mb-6 text-center space-y-2">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 mb-1">
+            <CheckCircle2 className="w-7 h-7" />
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">
+            Sale Created Successfully!
+          </h2>
+          <p className="text-sm text-gray-500">
+            Invoice{" "}
+            <span className="font-semibold text-gray-700">
+              {receiptData.invoiceNumber}
+            </span>{" "}
+            has been generated.
+          </p>
+        </div>
+
+        <div className="mb-6 shadow-md rounded-xl overflow-hidden bg-white p-4">
+          <ThermalReceipt receiptData={receiptData} />
+        </div>
+
+        <div className="flex gap-4 w-full max-w-md">
+          <button
+            onClick={() => window.print()}
+            className="flex-1 bg-slate-900 text-white py-2.5 rounded-xl text-sm font-semibold hover:bg-slate-800 transition cursor-pointer shadow-sm"
+          >
+            Print Receipt
+          </button>
+          <button
+            onClick={() => {
+              setIsCompleted(false);
+              setReceiptData(null);
+            }}
+            className="flex-1 bg-white border border-gray-300 text-gray-700 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-100 transition cursor-pointer shadow-sm"
+          >
+            Create Another Sale
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-7xl mx-auto p-6 bg-gray-50 min-h-screen font-sans">
-      {/* Header */}
       <div className="mb-6">
         <h1 className="text-2xl font-bold text-gray-900">New Sale</h1>
         <p className="text-sm text-gray-500">
@@ -175,9 +214,7 @@ export default function CreateSalePage() {
         onSubmit={handleSubmit(onSubmit)}
         className="grid grid-cols-1 lg:grid-cols-3 gap-6"
       >
-        {/* Left 2 Columns: Customer & Products */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Customer Section */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-center gap-2 mb-4 text-gray-800 font-semibold">
               <User className="w-5 h-5 text-gray-500" />
@@ -215,7 +252,7 @@ export default function CreateSalePage() {
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Address (optional)
+                Address
               </label>
               <textarea
                 {...register("customer.address")}
@@ -226,7 +263,6 @@ export default function CreateSalePage() {
             </div>
           </div>
 
-          {/* Products Section */}
           <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 text-gray-800 font-semibold">
@@ -278,7 +314,6 @@ export default function CreateSalePage() {
                     key={field.id}
                     className="p-2 border border-gray-200 rounded-xl bg-gray-50/50 flex flex-col md:flex-row gap-4 items-start md:items-center"
                   >
-                    {/* Product Dropdown */}
                     <div className="flex-1 w-full">
                       <label className="block text-xs font-medium text-gray-500 mb-1">
                         Product
@@ -323,7 +358,6 @@ export default function CreateSalePage() {
                       </select>
                     </div>
 
-                    {/* Quantity Stepper (- 1 +) */}
                     <div className="w-26">
                       <label className="block text-xs font-medium text-gray-500 mb-1">
                         Qty
@@ -354,7 +388,6 @@ export default function CreateSalePage() {
                       </div>
                     </div>
 
-                    {/* Warranty */}
                     <div className="w-22">
                       <label className="block text-xs font-medium text-gray-500 mb-1">
                         Warranty (mo)
@@ -370,7 +403,6 @@ export default function CreateSalePage() {
                       />
                     </div>
 
-                    {/* Price & Delete */}
                     <div className="flex items-center justify-between w-full md:w-auto gap-4 mt-2 md:mt-0">
                       <div className="text-right font-semibold text-sm text-gray-900 min-w-[90px]">
                         BDT {itemSubtotal.toLocaleString()}
@@ -397,7 +429,6 @@ export default function CreateSalePage() {
           </div>
         </div>
 
-        {/* Right Column: Payment Summary Sidebar */}
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm h-fit space-y-4">
           <h2 className="font-bold text-gray-900 text-lg border-b pb-3">
             Payment summary
@@ -454,7 +485,7 @@ export default function CreateSalePage() {
               <input
                 type="number"
                 min={1}
-                placeholder="e.g. 3"
+                placeholder="e.g. 1"
                 {...register("dueCommitmentMonths", { valueAsNumber: true })}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 placeholder-gray-400"
               />
@@ -466,7 +497,7 @@ export default function CreateSalePage() {
             disabled={isSubmitting}
             className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 mt-4 cursor-pointer"
           >
-            {isSubmitting ? "Creating sale..." : "Create sale"}
+            {isSubmitting ? "Creating sale..." : "Create sale & Print"}
           </button>
         </div>
       </form>
