@@ -13,6 +13,8 @@ import {
   ShieldCheck,
   Menu,
   X,
+  BadgePoundSterling,
+  ChartNoAxesCombined,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -51,8 +53,8 @@ export default function DashboardLayout({
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Categories", href: "/dashboard/categories", icon: Layers },
     { name: "Products", href: "/dashboard/products", icon: Package },
-    { name: "Sales", href: "/dashboard/sales", icon: ShoppingCart },
-    { name: "Statistics", href: "/dashboard/statistics", icon: Layers },
+    { name: "Sales", href: "/dashboard/sales", icon: BadgePoundSterling },
+    { name: "Statistics", href: "/dashboard/statistics", icon: ChartNoAxesCombined },
   ];
 
   const renderSidebarContent = () => (

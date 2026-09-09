@@ -1,6 +1,6 @@
+import SaleStatistics from "@/features/statistic/components/SaleStatistics";
+import { ChartNoAxesCombined } from "lucide-react";
 import type { Metadata } from "next";
-
-import SaleStatistics from "@/components/modules/sale/statistics/SaleStatistics";
 
 export const metadata: Metadata = {
   title: "Sales Statistics",
@@ -9,15 +9,18 @@ export const metadata: Metadata = {
 
 const SalesStatisticsPage = () => {
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Sales Statistics</h1>
-
-        <p className="mt-1 text-sm text-gray-500">
-          View sales, payments, due amounts, profit and transaction statistics.
-        </p>
+    <div className="space-y-6">
+      <div className="bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h1 className="text-xl font-bold text-slate-900 flex items-center gap-2">
+            <ChartNoAxesCombined className="w-6 h-6 text-indigo-600" /> Sales
+          </h1>
+          <p className="text-xs text-slate-500 font-normal mt-0.5">
+            View sales, payments, due amounts, profit and transaction
+            statistics.
+          </p>
+        </div>
       </div>
-
       <SaleStatistics />
     </div>
   );

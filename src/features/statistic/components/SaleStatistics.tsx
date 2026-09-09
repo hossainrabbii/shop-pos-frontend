@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import type { ISaleStatistics, IStatisticsQuery } from "@/types/saleStatistics";
-
-import { getSaleStatistics } from "@/services/statistics";
 
 import StatisticsCards from "./StatisticsCards";
 import StatisticsFilters from "./StatisticsFilters";
+import { fetchSaleStatistics } from "../statistic.service";
+import { ISaleStatistics, IStatisticsQuery } from "../statistic.type";
 
 const SaleStatistics = () => {
   const [query, setQuery] = useState<IStatisticsQuery>({
@@ -24,7 +23,7 @@ const SaleStatistics = () => {
       setLoading(true);
       setError("");
 
-      const response = await getSaleStatistics(currentQuery);
+      const response = await fetchSaleStatistics(currentQuery);
 
       setStatistics(response.data);
     } catch (error) {

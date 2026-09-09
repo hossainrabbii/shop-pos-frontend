@@ -1,4 +1,5 @@
-import type { ISaleStatistics } from "@/types/saleStatistics";
+import { ISaleStatistics } from "../statistic.type";
+
 
 interface StatisticsCardsProps {
   statistics?: ISaleStatistics | null;

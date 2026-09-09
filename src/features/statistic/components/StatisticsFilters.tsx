@@ -1,9 +1,6 @@
 "use client";
 
-import type {
-  IStatisticsQuery,
-  StatisticsPeriod,
-} from "@/types/saleStatistics";
+import { IStatisticsQuery, StatisticsPeriod } from "../statistic.type";
 
 interface StatisticsFiltersProps {
   query: IStatisticsQuery;
