@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-
 import StatisticsCards from "./StatisticsCards";
 import StatisticsFilters from "./StatisticsFilters";
 import { fetchSaleStatistics } from "../statistic.service";
@@ -22,16 +21,13 @@ const SaleStatistics = () => {
     try {
       setLoading(true);
       setError("");
-
       const response = await fetchSaleStatistics(currentQuery);
-
       setStatistics(response.data);
     } catch (error) {
       const message =
         error instanceof Error
           ? error.message
           : "Failed to fetch sales statistics";
-
       setError(message);
       setStatistics(null);
     } finally {

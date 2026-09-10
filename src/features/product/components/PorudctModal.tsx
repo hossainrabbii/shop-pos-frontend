@@ -3,15 +3,13 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-// import {
-//   productSchema,
-//   ProductInput,
-//   ProductFormData,
-// } from "@/schemas/product.schema";
-// import { Product, CategoryOption } from "@/types/product.interface";
 import { X } from "lucide-react";
 import { LoadingButton } from "@/components/ui/LoadingButton";
-import { ProductFormData, ProductInput, productSchema } from "../product.validation";
+import {
+  ProductFormData,
+  ProductInput,
+  productSchema,
+} from "../product.validation";
 import { CategoryOption, Product } from "../product.type";
 
 interface ProductModalProps {

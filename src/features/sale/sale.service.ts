@@ -1,8 +1,8 @@
 import { api } from "@/lib/api";
-import { CreateSaleFormData } from "@/schemas/newSale.schema";
+import { ICreateSalePayload } from "./sale.type";
 
 // Create a sale
-export const createSaleService = async (saleData: CreateSaleFormData) => {
+export const createSaleService = async (saleData: ICreateSalePayload) => {
   const response = await api.post("/sales", saleData);
   return response.data;
 };

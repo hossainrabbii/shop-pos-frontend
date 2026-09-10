@@ -1,17 +1,58 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Layers, Package, AlertTriangle, ReceiptText } from "lucide-react";
+import { fetchSaleStatistics } from "@/features/statistic/statistic.service";
+import {
+  ISaleStatistics,
+  IStatisticsQuery,
+} from "@/features/statistic/statistic.type";
+import { toast } from "sonner";
+import { fetchCategoryList } from "@/features/category/category.service";
+import { Category } from "@/features/category/category.type";
+import { Product } from "@/features/product/product.type";
+import { fetchProducts } from "@/features/product/product.service";
 
 export default function DashboardHomePage() {
   const [user, setUser] = useState<{ name: string } | null>(null);
+  const [statistics, setStatistics] = useState<ISaleStatistics | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch data on load
+  const fetchStatistics = async (
+    currentQuery: IStatisticsQuery = { period: "today" },
+  ) => {
+    try {
+      setIsLoading(true);
+      const saleStateRes = await fetchSaleStatistics(currentQuery);
+      const categoryRes = await fetchCategoryList();
+      const prodRes = await fetchProducts();
+      setCategories(categoryRes?.data);
+      setStatistics(saleStateRes?.data);
+      setProducts(prodRes?.data);
+      console.log(products);
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message || "Failed to fetch categories",
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  console.log(products);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+    fetchStatistics({
+      period: "today",
+    });
   }, []);
 
   return (
@@ -35,13 +76,15 @@ export default function DashboardHomePage() {
       </div>
 
       {/* Quick Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
           <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Today's Revenue
+            Today's Profit
           </p>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">৳0.00</h3>
+            <h3 className="text-2xl font-extrabold text-slate-900">
+              ৳ {statistics?.totalProfit}
+            </h3>
             <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
               ৳
             </div>
@@ -53,7 +96,9 @@ export default function DashboardHomePage() {
             Total Products
           </p>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">0</h3>
+            <h3 className="text-2xl font-extrabold text-slate-900">
+              {products?.length}
+            </h3>
             <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
               <Package className="w-5 h-5" />
             </div>
@@ -65,14 +110,16 @@ export default function DashboardHomePage() {
             Categories
           </p>
           <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">0</h3>
+            <h3 className="text-2xl font-extrabold text-slate-900">
+              {categories?.length}
+            </h3>
             <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
               <Layers className="w-5 h-5" />
             </div>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+        {/* <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
           <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Low Stock Alerts
           </p>
@@ -82,7 +129,7 @@ export default function DashboardHomePage() {
               <AlertTriangle className="w-5 h-5" />
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

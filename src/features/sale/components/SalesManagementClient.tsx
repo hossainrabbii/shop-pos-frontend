@@ -11,9 +11,9 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-import { ISale } from "@/types/sale.types";
-import { fetchUser } from "@/services/User";
 import { fetchSalesList } from "@/features/sale/sale.service";
+import { fetchUser } from "@/features/user/user.services";
+import { ISale } from "../sale.type";
 
 export default function SalesManagementClient() {
   const [sales, setSales] = useState<ISale[]>([]);
@@ -33,10 +33,8 @@ export default function SalesManagementClient() {
   useEffect(() => {
     const fetchSellersData = async () => {
       try {
-        const accessToken = localStorage.getItem("accessToken") || "";
-        const response = await fetchUser(accessToken);
-
-        const usersList = response?.data || response || [];
+        const response = await fetchUser();
+        const usersList = response?.data;
         setSellers(Array.isArray(usersList) ? usersList : []);
       } catch (err) {
         console.error("Failed to fetch sellers list", err);

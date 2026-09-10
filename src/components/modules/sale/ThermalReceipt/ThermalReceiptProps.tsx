@@ -197,7 +197,7 @@ export default function ThermalReceipt({
         <div className="text-center text-[10px] space-y-1 mt-4 pt-2 border-t border-black border-dashed">
           <p className="font-semibold">Thank you for your purchase!</p>
           <p className="text-[9px] text-zinc-500">
-            Software powered by POS System
+            Powered by Mohammad Hossain Rabbi
           </p>
         </div>
       </div>
