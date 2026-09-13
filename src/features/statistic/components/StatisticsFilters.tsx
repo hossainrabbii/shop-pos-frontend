@@ -164,7 +164,7 @@ const StatisticsFilters = ({
             className="w-full rounded-lg bg-black px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-600 mx-auto"></div>
             ) : (
               "Apply Filter"
             )}
