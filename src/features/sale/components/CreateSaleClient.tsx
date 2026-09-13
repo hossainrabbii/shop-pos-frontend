@@ -66,6 +66,8 @@ export default function CreateSaleClient() {
   const dueAmount = Math.max(0, totalAmount - watchedPaidAmount);
 
   const onSubmit = async (data: SaleFormValues) => {
+    console.log(data);
+
     try {
       setIsSubmitting(true);
 
@@ -85,7 +87,9 @@ export default function CreateSaleClient() {
           : {}),
       };
 
+      console.log(payload);
       const response = await createSaleService(payload);
+      console.log(response);
 
       if (response?.success) {
         toast.success(response?.message || "Sale created successfully!");
@@ -128,7 +132,10 @@ export default function CreateSaleClient() {
 
       <FormProvider {...methods}>
         <form
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit(
+            onSubmit,
+            (errors) => console.log("Form Validation Failed:", errors), // <--- Add this error handler
+          )}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >
           <div className="lg:col-span-2 space-y-6">

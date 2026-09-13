@@ -23,5 +23,26 @@ export const createSaleValidation = z.object({
     .min(1, "At least one product is required"),
   discount: z.number().min(0).optional(),
   paidAmount: z.number().min(0, "Paid amount cannot be negative"),
-  dueCommitmentMonths: z.number().min(0).optional(),
-});
+
+  // Cleaned up preprocess with explicit number type casting
+  dueCommitmentMonths: z.preprocess((val) => {
+    if (val === "" || val === undefined || val === null || Number.isNaN(val)) {
+      return undefined;
+    }
+    return Number(val);
+  }, z.number().optional()),
+}) as z.ZodType<{
+  customer: {
+    name: string;
+    phone: string;
+    address?: string;
+  };
+  items: Array<{
+    productId: string;
+    quantity: number;
+    warrantyMonths?: number;
+  }>;
+  discount?: number;
+  paidAmount: number;
+  dueCommitmentMonths?: number;
+}>;

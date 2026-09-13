@@ -8,6 +8,8 @@ export const categorySchema = z.object({
   description: z
     .string()
     .max(200, "Description cannot exceed 200 characters")
-    .optional()
-    .or(z.literal("")),
-});
+    .optional(),
+}) as z.ZodType<{
+  name: string;
+  description?: string;
+}>;

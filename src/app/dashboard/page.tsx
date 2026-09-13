@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Layers, Package, ReceiptText } from "lucide-react";
+import { Layers, Loader2, Package, ReceiptText } from "lucide-react";
 import { fetchSaleStatistics } from "@/features/statistic/statistic.service";
 import {
   ISaleStatistics,
@@ -76,50 +76,58 @@ export default function DashboardHomePage() {
       </div>
 
       {/* Quick Metrics Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Today's Profit
+      {isLoading ? (
+        <div className="flex flex-col items-center justify-center py-16 gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+          <p className="text-xs font-semibold text-slate-400">
+            Loading categories...
           </p>
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">
-              ৳ {statistics?.totalProfit}
-            </h3>
-            <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
-              ৳
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Today's Profit
+            </p>
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-extrabold text-slate-900">
+                ৳ {statistics?.totalProfit}
+              </h3>
+              <div className="p-2 bg-emerald-50 text-emerald-600 rounded-xl">
+                ৳
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Total Products
-          </p>
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">
-              {products?.length}
-            </h3>
-            <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
-              <Package className="w-5 h-5" />
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Total Products
+            </p>
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-extrabold text-slate-900">
+                {products?.length}
+              </h3>
+              <div className="p-2 bg-indigo-50 text-indigo-600 rounded-xl">
+                <Package className="w-5 h-5" />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
-          <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-            Categories
-          </p>
-          <div className="flex items-center justify-between">
-            <h3 className="text-2xl font-extrabold text-slate-900">
-              {categories?.length}
-            </h3>
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
-              <Layers className="w-5 h-5" />
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+              Categories
+            </p>
+            <div className="flex items-center justify-between">
+              <h3 className="text-2xl font-extrabold text-slate-900">
+                {categories?.length}
+              </h3>
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+                <Layers className="w-5 h-5" />
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
+          {/* <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
           <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
             Low Stock Alerts
           </p>
@@ -130,7 +138,8 @@ export default function DashboardHomePage() {
             </div>
           </div>
         </div> */}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

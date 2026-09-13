@@ -35,6 +35,7 @@ export default function ThermalReceipt({
   shopInfo,
 }: ThermalReceiptProps) {
   const [fetchedShop, setFetchedShop] = useState<any>(null);
+  const [isLoadingShop, setIsLoadingShop] = useState(!shopInfo);
 
   useEffect(() => {
     // Only fetch if shopInfo prop wasn't passed down externally
@@ -50,11 +51,28 @@ export default function ThermalReceipt({
             "Could not load shop settings from backend, using default demo values.",
             error,
           );
+        } finally {
+          setIsLoadingShop(false);
         }
       };
       fetchShop();
     }
   }, [shopInfo]);
+
+  // Show a waiting/loading indicator inside the receipt bounds while fetching
+  if (isLoadingShop && !shopInfo) {
+    return (
+      <div className="flex flex-col items-center">
+        <div
+          id="thermal-receipt"
+          className="w-[80mm] h-[150px] p-4 bg-white text-black font-mono text-[11px] flex flex-col items-center justify-center space-y-2 select-none"
+        >
+          <div className="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent" />
+          <p className="text-[10px] text-zinc-600">Loading shop info...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Merge shopInfo prop, backend fetched shop, or fallback demo info
   const activeShop = shopInfo ||
