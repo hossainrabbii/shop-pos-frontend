@@ -8,13 +8,16 @@ import {
   LayoutDashboard,
   Layers,
   Package,
-  ShoppingCart,
   LogOut,
-  ShieldCheck,
   Menu,
   X,
   BadgePoundSterling,
   ChartNoAxesCombined,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Clock,
+  Calendar as CalendarIcon,
+  Building2,
 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthGuard } from "@/components/auth/AuthGuard";
@@ -30,12 +33,22 @@ export default function DashboardLayout({
     null,
   );
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [currentTime, setCurrentTime] = useState<Date | null>(null);
 
   useEffect(() => {
+    // Set initial time on client to prevent hydration mismatch
+    setCurrentTime(new Date());
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     }
+
+    return () => clearInterval(timer);
   }, []);
 
   // Close mobile menu automatically when route changes
@@ -54,24 +67,30 @@ export default function DashboardLayout({
     { name: "Categories", href: "/dashboard/categories", icon: Layers },
     { name: "Products", href: "/dashboard/products", icon: Package },
     { name: "Sales", href: "/dashboard/sales", icon: BadgePoundSterling },
-    { name: "Statistics", href: "/dashboard/statistics", icon: ChartNoAxesCombined },
+    {
+      name: "Statistics",
+      href: "/dashboard/statistics",
+      icon: ChartNoAxesCombined,
+    },
   ];
 
-  const renderSidebarContent = () => (
+  const renderSidebarContent = (isCollapsed = false) => (
     <div className="flex flex-col h-full justify-between">
       <div>
         {/* Logo Area */}
-        <div className="h-16 border-b border-slate-200 flex items-center px-6 gap-2">
-          <div className="bg-indigo-600 p-2 rounded-lg text-white">
+        <div className="h-16 border-b border-slate-200 flex items-center px-4 gap-2 overflow-hidden">
+          <div className="bg-indigo-600 p-2 rounded-lg text-white shrink-0">
             <Store className="w-5 h-5" />
           </div>
-          <span className="font-bold text-slate-900 tracking-tight">
-            ShopPOS Enterprise
-          </span>
+          {!isCollapsed && (
+            <span className="font-bold text-slate-900 tracking-tight truncate">
+              ShopPOS Enterprise
+            </span>
+          )}
         </div>
 
         {/* Navigation Links */}
-        <nav className="p-4 space-y-1">
+        <nav className="p-3 space-y-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -79,14 +98,15 @@ export default function DashboardLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition ${
+                title={isCollapsed ? item.name : undefined}
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition ${
                   isActive
                     ? "bg-indigo-50 text-indigo-600 shadow-xs"
                     : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                }`}
+                } ${isCollapsed ? "justify-center px-2" : ""}`}
               >
-                <Icon className="w-4 h-4" />
-                {item.name}
+                <Icon className="w-4 h-4 shrink-0" />
+                {!isCollapsed && <span className="truncate">{item.name}</span>}
               </Link>
             );
           })}
@@ -94,31 +114,59 @@ export default function DashboardLayout({
       </div>
 
       {/* Sidebar Footer / User Badge */}
-      <div className="p-4 border-t border-slate-200">
-        <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3">
-          <p className="text-xs font-bold text-slate-900 truncate">
-            {user?.name || "Administrator"}
-          </p>
-          <p className="text-[10px] text-slate-500 truncate">
-            {user?.email || "admin@shop.com"}
-          </p>
-        </div>
+      <div className="p-3 border-t border-slate-200">
+        {!isCollapsed && (
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3 overflow-hidden">
+            <p className="text-xs font-bold text-slate-900 truncate">
+              {user?.name || "Administrator"}
+            </p>
+            <p className="text-[10px] text-slate-500 truncate">
+              {user?.email || "admin@shop.com"}
+            </p>
+          </div>
+        )}
         <button
           onClick={handleLogout}
-          className="w-full flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-rose-50 hover:border-rose-100 text-slate-700 hover:text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer shadow-xs"
+          title={isCollapsed ? "Sign Out" : undefined}
+          className={`w-full flex items-center justify-center gap-2 bg-white border border-slate-200 hover:bg-rose-50 hover:border-rose-100 text-slate-700 hover:text-rose-600 px-3 py-2 rounded-xl text-xs font-semibold transition cursor-pointer shadow-xs ${
+            isCollapsed ? "px-2" : ""
+          }`}
         >
-          <LogOut className="w-4 h-4" /> Sign Out
+          <LogOut className="w-4 h-4 shrink-0" />
+          {!isCollapsed && <span>Sign Out</span>}
         </button>
       </div>
     </div>
   );
 
+  // Format full day name and date
+  const formattedDate = currentTime
+    ? currentTime.toLocaleDateString("en-US", {
+        weekday: "long",
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      })
+    : "";
+
+  const formattedTime = currentTime
+    ? currentTime.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })
+    : "";
+
   return (
     <AuthGuard>
-      <div className="min-h-screen bg-slate-100 flex">
+      <div className="h-screen bg-slate-100 flex overflow-hidden">
         {/* Desktop Sidebar */}
-        <aside className="w-64 bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0">
-          {renderSidebarContent()}
+        <aside
+          className={`bg-white border-r border-slate-200 hidden md:flex flex-col shrink-0 transition-all duration-300 ${
+            isSidebarCollapsed ? "w-20" : "w-64"
+          }`}
+        >
+          {renderSidebarContent(isSidebarCollapsed)}
         </aside>
 
         {/* Mobile Sidebar Overlay Drawer */}
@@ -131,7 +179,7 @@ export default function DashboardLayout({
               >
                 <X className="w-4 h-4" />
               </button>
-              {renderSidebarContent()}
+              {renderSidebarContent(false)}
             </div>
             <div
               className="flex-1"
@@ -141,9 +189,9 @@ export default function DashboardLayout({
         )}
 
         {/* Main Workspace Area */}
-        <div className="flex-1 flex flex-col min-w-0">
+        <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
           {/* Top Header Bar */}
-          <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-40 shadow-xs">
+          <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between shrink-0 z-40 shadow-xs">
             <div className="flex items-center gap-3">
               {/* Mobile Menu Trigger Button */}
               <button
@@ -154,19 +202,51 @@ export default function DashboardLayout({
                 <Menu className="w-5 h-5" />
               </button>
 
-              <div className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[11px] font-semibold">
-                <ShieldCheck className="w-3.5 h-3.5" /> Secure Session Active
+              {/* Desktop Sidebar Toggle Button */}
+              <button
+                onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+                className="hidden md:flex p-2 rounded-xl border border-slate-200 bg-slate-50 text-slate-700 hover:bg-slate-100 transition cursor-pointer"
+                title={
+                  isSidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"
+                }
+              >
+                {isSidebarCollapsed ? (
+                  <PanelLeftOpen className="w-5 h-5" />
+                ) : (
+                  <PanelLeftClose className="w-5 h-5" />
+                )}
+              </button>
+
+              {/* Full Day Date & Clock Display */}
+              <div className="hidden lg:inline-flex items-center gap-3 px-3.5 py-1.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 text-xs font-semibold shadow-2xs">
+                <span className="flex items-center gap-1.5 text-slate-600">
+                  <CalendarIcon className="w-3.5 h-3.5 text-indigo-600" />
+                  {formattedDate || "Loading..."}
+                </span>
+                <span className="text-slate-300">|</span>
+                <span className="flex items-center gap-1.5 font-mono text-slate-900">
+                  <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                  {formattedTime || "--:--:--"}
+                </span>
               </div>
             </div>
 
-            <div className="text-xs font-semibold text-slate-600">
-              Workspace:{" "}
-              <span className="text-slate-900 font-bold">Main Branch</span>
+            {/* Workspace Link with Icon */}
+            <div className="text-xs font-semibold">
+              <Link
+                href="/dashboard/workspace"
+                className="inline-flex items-center gap-2 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 hover:border-indigo-300 text-indigo-700 px-3.5 py-2 rounded-xl text-xs font-semibold transition cursor-pointer shadow-2xs"
+              >
+                <Building2 className="w-4 h-4" />
+                <span>Workspace Profile</span>
+              </Link>
             </div>
           </header>
 
-          {/* Page Content View */}
-          <main className="flex-1 p-4 sm:p-6 overflow-y-auto">{children}</main>
+          {/* Scrollable Page Content View */}
+          <main className="flex-1 p-4 sm:p-6 overflow-y-auto min-h-0 bg-slate-100">
+            {children}
+          </main>
         </div>
       </div>
     </AuthGuard>

@@ -1,4 +1,5 @@
-import React from "react";
+import { getShopSettings } from "@/features/shop/shop.service";
+import React, { useEffect, useState } from "react";
 
 interface ThermalReceiptProps {
   receiptData: {
@@ -21,9 +22,11 @@ interface ThermalReceiptProps {
     dueCommitmentMonths?: number;
   };
   shopInfo?: {
-    name: string;
-    address: string;
-    phone: string;
+    name?: string;
+    address?: string;
+    phone?: string;
+    website?: string;
+    receiptFooter?: string;
   };
 }
 
@@ -31,11 +34,37 @@ export default function ThermalReceipt({
   receiptData,
   shopInfo,
 }: ThermalReceiptProps) {
-  const defaultShop = shopInfo || {
-    name: "YOUR SHOP NAME",
-    address: "123 Market Road, Dhaka",
-    phone: "+880 1700-000000",
-  };
+  const [fetchedShop, setFetchedShop] = useState<any>(null);
+
+  useEffect(() => {
+    // Only fetch if shopInfo prop wasn't passed down externally
+    if (!shopInfo) {
+      const fetchShop = async () => {
+        try {
+          const response = await getShopSettings();
+          if (response) {
+            setFetchedShop(response);
+          }
+        } catch (error) {
+          console.log(
+            "Could not load shop settings from backend, using default demo values.",
+            error,
+          );
+        }
+      };
+      fetchShop();
+    }
+  }, [shopInfo]);
+
+  // Merge shopInfo prop, backend fetched shop, or fallback demo info
+  const activeShop = shopInfo ||
+    fetchedShop || {
+      name: "YOUR SHOP NAME",
+      address: "123 Market Road, Dhaka",
+      phone: "+880 1700-000000",
+      website: "",
+      receiptFooter: "Thank you for your purchase!",
+    };
 
   // Automatically calculate subtotal from items if receiptData.subTotal isn't explicitly passed
   const calculatedSubTotal =
@@ -43,7 +72,7 @@ export default function ThermalReceipt({
       ? receiptData.subTotal
       : receiptData.items.reduce((acc, item) => acc + item.subtotal, 0);
 
-  // Calculate discount if not explicitly passed (Subtotal + Discount = Total, so Discount = Subtotal - TotalAmount)
+  // Calculate discount if not explicitly passed
   const discountAmount =
     receiptData.discount !== undefined
       ? receiptData.discount
@@ -56,15 +85,24 @@ export default function ThermalReceipt({
         id="thermal-receipt"
         className="w-[80mm] p-2 bg-white text-black font-mono text-[11px] leading-tight select-none"
       >
-        {/* Header */}
+        {/* Header - Shop Info */}
         <div className="text-center space-y-0.5 mb-2">
-          <h1 className="text-sm font-bold uppercase tracking-wider">
-            {defaultShop.name}
-          </h1>
-          <p className="text-[10px] text-zinc-600">{defaultShop.address}</p>
-          <p className="text-[10px] text-zinc-600">
-            Phone: {defaultShop.phone}
-          </p>
+          {activeShop.name && (
+            <h1 className="text-sm font-bold uppercase tracking-wider">
+              {activeShop.name}
+            </h1>
+          )}
+          {activeShop.address && (
+            <p className="text-[10px] text-zinc-600">{activeShop.address}</p>
+          )}
+          {activeShop.phone && (
+            <p className="text-[10px] text-zinc-600">
+              Phone: {activeShop.phone}
+            </p>
+          )}
+          {activeShop.website && (
+            <p className="text-[10px] text-zinc-600">{activeShop.website}</p>
+          )}
         </div>
 
         <div className="border-b border-black border-dashed my-1" />
@@ -195,9 +233,8 @@ export default function ThermalReceipt({
 
         {/* Footer Note */}
         <div className="text-center text-[10px] space-y-1 mt-4 pt-2 border-t border-black border-dashed">
-          <p className="font-semibold">Thank you for your purchase!</p>
-          <p className="text-[9px] text-zinc-500">
-            Powered by Mohammad Hossain Rabbi
+          <p className="font-semibold">
+            {activeShop.receiptFooter || "Thank you for your purchase!"}
           </p>
         </div>
       </div>

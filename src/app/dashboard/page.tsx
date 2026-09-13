@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Layers, Package, AlertTriangle, ReceiptText } from "lucide-react";
+import { Layers, Package, ReceiptText } from "lucide-react";
 import { fetchSaleStatistics } from "@/features/statistic/statistic.service";
 import {
   ISaleStatistics,
