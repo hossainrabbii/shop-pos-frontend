@@ -85,7 +85,7 @@ export default function PaymentSummarySection({
         disabled={isSubmitting}
         className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 mt-4 cursor-pointer"
       >
-        {isSubmitting ? "Creating sale..." : "Create sale & Print"}
+        {isSubmitting ? "Processing sale..." : "Create sale & Print"}
       </button>
     </div>
   );

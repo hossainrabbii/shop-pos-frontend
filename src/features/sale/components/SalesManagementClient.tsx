@@ -135,9 +135,9 @@ export default function SalesManagementClient() {
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden flex flex-col flex-1 min-h-0">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 flex-1">
-            <Loader2 className="w-8 h-8 animate-spin text-indigo-600" />
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
             <p className="text-xs font-semibold text-slate-400">
-              Loading sales records...
+              Retrieving sales records...
             </p>
           </div>
         ) : sales.length === 0 ? (

@@ -59,7 +59,6 @@ export default function ThermalReceipt({
     }
   }, [shopInfo]);
 
-  // Show a waiting/loading indicator inside the receipt bounds while fetching
   if (isLoadingShop && !shopInfo) {
     return (
       <div className="flex flex-col items-center">
@@ -68,13 +67,12 @@ export default function ThermalReceipt({
           className="w-[80mm] h-[150px] p-4 bg-white text-black font-mono text-[11px] flex flex-col items-center justify-center space-y-2 select-none"
         >
           <div className="animate-spin rounded-full h-5 w-5 border-2 border-black border-t-transparent" />
-          <p className="text-[10px] text-zinc-600">Loading shop info...</p>
+          <p className="text-[10px] text-zinc-600">Fetching shop info...</p>
         </div>
       </div>
     );
   }
 
-  // Merge shopInfo prop, backend fetched shop, or fallback demo info
   const activeShop = shopInfo ||
     fetchedShop || {
       name: "YOUR SHOP NAME",

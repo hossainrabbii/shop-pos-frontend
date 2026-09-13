@@ -85,6 +85,7 @@ export default function SaleDetailsClient({ saleId }: Props) {
   if (loading) {
     return (
       <div className="p-8 text-center text-slate-500 font-medium text-xs">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
         Loading invoice details...
       </div>
     );

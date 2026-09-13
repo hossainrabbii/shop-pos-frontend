@@ -132,9 +132,8 @@ export default function CreateSaleClient() {
 
       <FormProvider {...methods}>
         <form
-          onSubmit={handleSubmit(
-            onSubmit,
-            (errors) => console.log("Form Validation Failed:", errors), // <--- Add this error handler
+          onSubmit={handleSubmit(onSubmit, (errors) =>
+            console.log("Form Validation Failed:", errors),
           )}
           className="grid grid-cols-1 lg:grid-cols-3 gap-6"
         >

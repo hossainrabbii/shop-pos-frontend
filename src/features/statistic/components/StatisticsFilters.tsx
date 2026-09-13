@@ -163,7 +163,11 @@ const StatisticsFilters = ({
             disabled={loading}
             className="w-full rounded-lg bg-black px-4 py-2.5 text-sm font-medium text-white transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {loading ? "Loading..." : "Apply Filter"}
+            {loading ? (
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+            ) : (
+              "Apply Filter"
+            )}
           </button>
         </div>
       </div>
