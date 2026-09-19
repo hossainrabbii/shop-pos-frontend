@@ -116,13 +116,42 @@ export default function DashboardLayout({
       {/* Sidebar Footer / User Badge */}
       <div className="p-3 border-t border-slate-200">
         {!isCollapsed && (
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 mb-3 overflow-hidden">
-            <p className="text-xs font-bold text-slate-900 truncate">
-              {user?.name || "Administrator"}
-            </p>
-            <p className="text-[10px] text-slate-500 truncate">
-              {user?.email || "admin@shop.com"}
-            </p>
+          <div className="px-1 mb-1">
+            <a
+              href="https://hossainrabbi.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 hover:border-indigo-300 transition-all group"
+            >
+              <img
+                src="/hossainlogo.webp"
+                alt="Developer"
+                className="w-10 h-10 rounded-full object-cover border border-slate-200 group-hover:scale-105 transition-transform"
+              />
+              <div className="overflow-hidden">
+                <a
+                  href="https://hossainrabbi.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] text-slate-400 underline hover:text-indigo-600 transition-colors flex items-center justify-center gap-1 font-medium"
+                >
+                  <span>Developed by Hossain Rabbi</span>
+                  <svg
+                    className="w-2.5 h-2.5"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
+                </a>
+              </div>
+            </a>
           </div>
         )}
         <button

@@ -34,7 +34,6 @@ export default function DashboardHomePage() {
       setCategories(categoryRes?.data);
       setStatistics(saleStateRes?.data);
       setProducts(prodRes?.data);
-      console.log(products);
     } catch (error: any) {
       toast.error(
         error.response?.data?.message || "Failed to fetch categories",
@@ -43,7 +42,6 @@ export default function DashboardHomePage() {
       setIsLoading(false);
     }
   };
-  console.log(products);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
