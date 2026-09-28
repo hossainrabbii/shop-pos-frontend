@@ -1,36 +1,142 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shop POS & Management System — Frontend
 
-## Getting Started
+A modern, responsive web application for managing day-to-day shop operations, including POS sales, products, inventory, employees, customers, payments, reports, and shop settings.
 
-First, run the development server:
+## Live Demo
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+**Live Application:** https://shop-pos-xi.vercel.app
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Overview
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The frontend provides a user-friendly interface for shop owners and employees to manage daily shop operations.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The application communicates with the backend through REST APIs and uses role-based access control to provide different functionality for owners and employees.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+### Authentication
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- User registration
+- Email OTP verification
+- Login and logout
+- Access token authentication
+- Refresh token handling
+- Forgot password
+- Password reset
+- Protected routes
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Dashboard
 
-## Deploy on Vercel
+- Today's sales
+- Sales overview
+- Profit overview
+- Current stock
+- Low-stock products
+- Transaction statistics
+- Recent sales
+- Best-selling products
+- Outstanding dues
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### POS
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Product search and selection
+- Cart management
+- Multiple products per sale
+- Quantity management
+- Discounts
+- Customer information
+- Payment handling
+- Due amount tracking
+- Payment status
+- Warranty information
+- Printable receipts
+
+### Product Management
+
+- Create products
+- View products
+- Update products
+- Delete products
+- Product categories
+- Purchase price
+- Selling price
+- Stock quantity
+- Low-stock threshold
+- Product status
+
+### Category Management
+
+- Create categories
+- Update categories
+- Delete categories
+- Activate/deactivate categories
+
+### Sales Management
+
+- Sales history
+- Sale details
+- Invoice/receipt information
+- Search and filtering
+- Date-based filtering
+- Payment status filtering
+- Employee-based filtering
+- Pagination
+- Additional payment collection
+
+### Reports & Statistics
+
+- Daily sales
+- Weekly sales
+- Monthly sales
+- Yearly sales
+- Specific-year statistics
+- Custom date range
+- Gross profit
+- Total paid amount
+- Total due amount
+- Transaction count
+- Best-selling products
+- Sales by employee
+
+### Employee Management
+
+- Employee information
+- Employee role
+- Employee status
+- Contact information
+- Designation
+- Salary information
+- Joining date
+
+### Shop Settings
+
+- Shop name
+- Logo
+- Phone number
+- Alternative phone
+- Email
+- Address
+- City
+- Website
+- Receipt footer
+
+## Technology Stack
+
+- Next.js
+- React
+- TypeScript
+- REST API
+- Responsive UI
+
+## Project Structure
+
+```text
+src/
+├── app/
+├── components/
+├── hooks/
+├── lib/
+├── services/
+├── store/
+├── types/
+└── ...

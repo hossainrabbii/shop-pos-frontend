@@ -7,7 +7,6 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowRight,
-  Loader2,
   AlertCircle,
 } from "lucide-react";
 
@@ -172,48 +171,69 @@ export default function SalesManagementClient() {
                   return (
                     <tr
                       key={sale._id}
-                      className="hover:bg-slate-50/60 transition"
+                      className="hover:bg-slate-50/80 transition group relative cursor-pointer"
                     >
-                      <td className="p-2.5 text-slate-500 text-[11px]">
-                        {sale.invoiceNumber}
-                      </td>
-                      <td className="p-2.5">
-                        <div className="font-medium text-slate-800">
-                          {sale.customer?.name || "Walk-in Customer"}
-                        </div>
-                        <div className="text-[11px] text-slate-400">
-                          {sale.customer?.phone || "No phone"}
-                        </div>
-                      </td>
-                      <td className="p-2.5 text-slate-700">{sellerName}</td>
-                      <td className="p-2.5 font-bold text-slate-900">
-                        BDT {sale.totalAmount?.toLocaleString() || 0}
-                      </td>
-                      <td className="p-2.5 text-slate-600">
-                        BDT {sale.paidAmount?.toLocaleString() || 0}
-                      </td>
-                      <td className="p-2.5">
-                        {sale.dueAmount > 0 ? (
-                          <span className="bg-orange-100 text-orange-700 font-semibold px-2 py-0.5 rounded-md text-[11px]">
-                            BDT {sale.dueAmount.toLocaleString()}
-                          </span>
-                        ) : (
-                          <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md text-[11px]">
-                            Paid
-                          </span>
-                        )}
-                      </td>
-                      <td className="p-2.5 text-slate-500 text-[11px]">
-                        {sale.createdAt
-                          ? new Date(sale.createdAt).toLocaleDateString()
-                          : "—"}
-                      </td>
-                      <td className="p-2.5 text-right">
+                      <td className="p-0" colSpan={8}>
                         <Link
                           href={`/dashboard/sales/${sale._id}`}
-                          className="inline-flex p-1.5 bg-slate-50 hover:bg-slate-900 hover:text-white rounded-lg text-slate-600 transition border border-slate-100"
+                          className="flex w-full items-center px-2.5 py-2.5"
                         >
-                          <ArrowRight className="w-4 h-4" />
+                          {/* 1. Invoice */}
+                          <div className="w-[12%] text-slate-500 text-[11px]">
+                            {sale.invoiceNumber}
+                          </div>
+
+                          {/* 2. Customer */}
+                          <div className="w-[18%] pr-2">
+                            <div className="font-medium text-slate-800 truncate">
+                              {sale.customer?.name || "Walk-in Customer"}
+                            </div>
+                            <div className="text-[11px] text-slate-400 truncate">
+                              {sale.customer?.phone || "No phone"}
+                            </div>
+                          </div>
+
+                          {/* 3. Sold by */}
+                          <div className="w-[14%] text-slate-700 truncate pr-2">
+                            {sellerName}
+                          </div>
+
+                          {/* 4. Total */}
+                          <div className="w-[12%] font-bold text-slate-900">
+                            BDT {sale.totalAmount?.toLocaleString() || 0}
+                          </div>
+
+                          {/* 5. Paid */}
+                          <div className="w-[12%] text-slate-600">
+                            BDT {sale.paidAmount?.toLocaleString() || 0}
+                          </div>
+
+                          {/* 6. Due */}
+                          <div className="w-[14%]">
+                            {sale.dueAmount > 0 ? (
+                              <span className="bg-orange-100 text-orange-700 font-semibold px-2 py-0.5 rounded-md text-[11px]">
+                                BDT {sale.dueAmount.toLocaleString()}
+                              </span>
+                            ) : (
+                              <span className="bg-emerald-50 text-emerald-700 font-semibold px-2 py-0.5 rounded-md text-[11px]">
+                                Paid
+                              </span>
+                            )}
+                          </div>
+
+                          {/* 7. Date */}
+                          <div className="w-[12%] text-slate-500 text-[11px]">
+                            {sale.createdAt
+                              ? new Date(sale.createdAt).toLocaleDateString()
+                              : "—"}
+                          </div>
+
+                          {/* 8. Action */}
+                          <div className="w-[6%] text-right flex justify-end">
+                            <span className="inline-flex p-1.5 bg-slate-50 group-hover:bg-slate-900 group-hover:text-white rounded-lg text-slate-600 transition border border-slate-100">
+                              <ArrowRight className="w-4 h-4" />
+                            </span>
+                          </div>
                         </Link>
                       </td>
                     </tr>

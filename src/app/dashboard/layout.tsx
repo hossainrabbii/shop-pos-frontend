@@ -121,23 +121,18 @@ export default function DashboardLayout({
               href="https://hossainrabbi.vercel.app/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 hover:border-indigo-300 transition-all group"
+              className="flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 hover:border-indigo-300 transition-all group block"
             >
               <img
                 src="/hossainlogo.webp"
                 alt="Developer"
-                className="w-10 h-10 rounded-full object-cover border border-slate-200 group-hover:scale-105 transition-transform"
+                className="w-10 h-10 rounded-full object-cover border border-slate-200 group-hover:scale-105 transition-transform shrink-0"
               />
               <div className="overflow-hidden">
-                <a
-                  href="https://hossainrabbi.vercel.app"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-[10px] text-slate-400 underline hover:text-indigo-600 transition-colors flex items-center justify-center gap-1 font-medium"
-                >
+                <p className="text-[10px] text-slate-400 group-hover:text-indigo-600 transition-colors flex items-center gap-1 font-medium truncate">
                   <span>Developed by Hossain Rabbi</span>
                   <svg
-                    className="w-2.5 h-2.5"
+                    className="w-2.5 h-2.5 shrink-0"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -149,7 +144,7 @@ export default function DashboardLayout({
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
                     />
                   </svg>
-                </a>
+                </p>
               </div>
             </a>
           </div>
