@@ -1,10 +1,13 @@
 "use client";
+
 import { useFormContext } from "react-hook-form";
 
 interface PaymentSummarySectionProps {
   subtotal: number;
   totalAmount: number;
   dueAmount: number;
+  grossProfit: number;
+  maximumDiscount: number;
   isSubmitting: boolean;
 }
 
@@ -12,6 +15,8 @@ export default function PaymentSummarySection({
   subtotal,
   totalAmount,
   dueAmount,
+  grossProfit,
+  maximumDiscount,
   isSubmitting,
 }: PaymentSummarySectionProps) {
   const { register } = useFormContext();
@@ -22,70 +27,127 @@ export default function PaymentSummarySection({
         Payment summary
       </h2>
 
+      {/* Subtotal */}
       <div className="flex justify-between text-sm text-gray-600">
         <span>Subtotal</span>
+
         <span className="font-semibold text-gray-900">
           BDT {subtotal.toLocaleString()}
         </span>
       </div>
 
+      {/* Gross Profit */}
+      <div className="flex justify-between text-sm text-gray-600">
+        <span>Gross profit</span>
+
+        <span
+          className={`font-semibold ${
+            grossProfit < 0
+              ? "text-red-600"
+              : "text-green-600"
+          }`}
+        >
+          BDT {grossProfit.toLocaleString()}
+        </span>
+      </div>
+
+      {/* Discount */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Discount
         </label>
+
         <input
           type="number"
           min={0}
-          {...register("discount", { valueAsNumber: true })}
+          {...register("discount", {
+            valueAsNumber: true,
+          })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700"
         />
+
+        {/* Maximum discount information */}
+        <p className="text-xs text-gray-500 mt-1">
+          Maximum discount:{" "}
+          <span className="font-semibold text-gray-700">
+            BDT {maximumDiscount.toLocaleString()}
+          </span>
+        </p>
+
+        {/* Loss warning */}
+        {grossProfit < 0 && (
+          <p className="text-xs text-red-600 font-medium mt-2">
+            ⚠ This discount will result in a loss.
+          </p>
+        )}
       </div>
 
+      {/* Total */}
       <div className="flex justify-between text-base font-bold text-gray-900 pt-2 border-t">
         <span>Total</span>
-        <span>BDT {totalAmount.toLocaleString()}</span>
+
+        <span>
+          BDT {totalAmount.toLocaleString()}
+        </span>
       </div>
 
+      {/* Paid Amount */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Paid amount
         </label>
+
         <input
           type="number"
           min={0}
-          {...register("paidAmount", { valueAsNumber: true })}
+          {...register("paidAmount", {
+            valueAsNumber: true,
+          })}
           className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700"
         />
       </div>
 
+      {/* Due */}
       <div className="flex justify-between items-center bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
-        <span className="text-sm font-medium text-amber-900">Due</span>
+        <span className="text-sm font-medium text-amber-900">
+          Due
+        </span>
+
         <span className="font-bold text-amber-900 bg-amber-200 px-2 py-0.5 rounded text-sm">
           BDT {dueAmount.toLocaleString()}
         </span>
       </div>
 
+      {/* Due Commitment */}
       {dueAmount > 0 && (
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Due commitment (months)
           </label>
+
           <input
             type="number"
             min={1}
             placeholder="e.g. 1"
-            {...register("dueCommitmentMonths", { valueAsNumber: true })}
+            {...register("dueCommitmentMonths", {
+              valueAsNumber: true,
+            })}
             className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 text-gray-700 placeholder-gray-400"
           />
         </div>
       )}
 
+      {/* Submit */}
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={
+          isSubmitting || grossProfit < 0
+        }
         className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 mt-4 cursor-pointer"
       >
-        {isSubmitting ? "Processing sale..." : "Create sale & Print"}
+        {isSubmitting
+          ? "Processing sale..."
+          : "Create sale & Print"}
       </button>
     </div>
   );
