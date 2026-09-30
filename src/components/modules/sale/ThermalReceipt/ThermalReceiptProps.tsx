@@ -253,10 +253,7 @@ export default function ThermalReceipt({
             {activeShop.receiptFooter || "Thank you for your purchase!"}
           </p>
           <div className="text-[8px]">
-            <p>Developed by Hossain Rabbi</p>
-            <a href="https://hossainrabbi.vercel.app/">
-              hossainrabbi.vercel.app
-            </a>
+            <p>Developed by Hossain Rabbi(hossainrabbi.vercel.app)</p>
           </div>
         </div>
       </div>
