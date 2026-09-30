@@ -1,11 +1,13 @@
 "use client";
 import { useFormContext } from "react-hook-form";
+import { FileDown } from "lucide-react";
 
 interface PaymentSummarySectionProps {
   subtotal: number;
   totalAmount: number;
   dueAmount: number;
   isSubmitting: boolean;
+  onDownloadDraft: () => void;
 }
 
 export default function PaymentSummarySection({
@@ -13,6 +15,7 @@ export default function PaymentSummarySection({
   totalAmount,
   dueAmount,
   isSubmitting,
+  onDownloadDraft,
 }: PaymentSummarySectionProps) {
   const { register } = useFormContext();
 
@@ -80,13 +83,24 @@ export default function PaymentSummarySection({
         </div>
       )}
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 mt-4 cursor-pointer"
-      >
-        {isSubmitting ? "Processing sale..." : "Create sale & Print"}
-      </button>
+      <div className="space-y-2 pt-2">
+        <button
+          type="submit"
+          disabled={isSubmitting}
+          className="w-full bg-slate-900 text-white py-2.5 rounded-lg font-medium hover:bg-slate-800 transition disabled:opacity-50 cursor-pointer"
+        >
+          {isSubmitting ? "Processing sale..." : "Create sale & Print"}
+        </button>
+
+        <button
+          type="button"
+          onClick={onDownloadDraft}
+          className="w-full flex items-center justify-center gap-2 bg-indigo-50 border border-indigo-200 text-indigo-700 py-2.5 rounded-lg font-medium hover:bg-indigo-100 transition cursor-pointer"
+        >
+          <FileDown className="w-4 h-4" />
+          <span>Download Draft (Products Subtotal)</span>
+        </button>
+      </div>
     </div>
   );
 }
